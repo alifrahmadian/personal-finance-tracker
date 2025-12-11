@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 )
 
@@ -15,6 +16,11 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, *logrus.Logger, func() error, error) {
+	err := godotenv.Load()
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf("no .env file found or error loading .env file, proceeding with environment variables: %w", err)
+	}
+
 	appCfg, err := LoadAppConfig()
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("load app config error: %w", err)
