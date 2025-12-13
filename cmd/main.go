@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/alifrahmadian/personal-finance-tracker/internal/config"
 	"github.com/alifrahmadian/personal-finance-tracker/internal/handler/health"
@@ -27,6 +28,11 @@ func newApp() *App {
 		gin.SetMode(gin.DebugMode)
 	}
 
+	_, err = config.ConnectDB(cfg.DBConfig)
+	if err != nil {
+		panic(err)
+	}
+
 	healthHandler := health.NewHandler(logger)
 
 	router := router.NewRouter(cfg.HandlerConfig, logger, &router.Handlers{
@@ -43,7 +49,15 @@ func main() {
 	app := newApp()
 	addr := fmt.Sprintf(":%d", app.Config.AppConfig.AppPort)
 
-	err := app.Router.Run(addr)
+	srv := &http.Server{
+		Addr:         addr,
+		Handler:      app.Router,
+		ReadTimeout:  app.Config.HandlerConfig.ReadTimeout,
+		WriteTimeout: app.Config.HandlerConfig.WriteTimeout,
+		IdleTimeout:  app.Config.HandlerConfig.WriteTimeout,
+	}
+
+	err := srv.ListenAndServe()
 	if err != nil {
 		fmt.Printf("Failed to start server: %v\n", err)
 	}

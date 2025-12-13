@@ -1,8 +1,7 @@
 package health
 
 import (
-	"net/http"
-
+	"github.com/alifrahmadian/personal-finance-tracker/internal/handler/response"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -19,7 +18,7 @@ func NewHandler(logger *logrus.Logger) *Handler {
 
 func (h *Handler) CheckHealth(c *gin.Context) {
 	h.logger.Info("Health check endpoint called")
-	c.JSON(http.StatusOK, gin.H{
-		"status": "healthy",
-	})
+	response.Success(c, gin.H{
+		"status": "ok",
+	}, "")
 }
