@@ -16,6 +16,7 @@ func NewRouter(handlerCfg *config.HandlerConfig, logger *logrus.Logger, handlers
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(middleware.RequestID())
+	router.Use(middleware.CORS(handlerCfg))
 
 	if handlerCfg.RequestLogger {
 		router.Use(middleware.RequestLogger(logger))
