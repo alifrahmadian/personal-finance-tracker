@@ -22,6 +22,7 @@ func CORS(cfg *config.HandlerConfig) gin.HandlerFunc {
 			c.Header("Access-Control-Allow-Origin", "*")
 		} else if originAllowed(origin, cfg.AllowedOrigins) {
 			c.Header("Access-Control-Allow-Origin", origin)
+			c.Header("Vary", "Origin")
 		} else {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 				"error": "CORS origin not allowed",
@@ -29,7 +30,6 @@ func CORS(cfg *config.HandlerConfig) gin.HandlerFunc {
 			return
 		}
 
-		c.Header("Access-Control-Allow-Origin", cfg.AllowedOrigins[0])
 		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Authorization,Content-Type,X-Request-ID")
 		c.Header("Access-Control-Allow-Credentials", "true")

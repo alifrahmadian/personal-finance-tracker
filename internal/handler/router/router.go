@@ -12,10 +12,16 @@ type Handlers struct {
 	Health *health.Handler
 }
 
-func NewRouter(handlerCfg *config.HandlerConfig, logger *logrus.Logger, handlers *Handlers) *gin.Engine {
+func NewRouter(
+	handlerCfg *config.HandlerConfig,
+	appCfg *config.AppConfig,
+	logger *logrus.Logger,
+	handlers *Handlers,
+) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(middleware.RequestID())
+	router.Use(middleware.SecurityHeaders(appCfg))
 	router.Use(middleware.CORS(handlerCfg))
 
 	if handlerCfg.RequestLogger {

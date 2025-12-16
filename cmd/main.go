@@ -35,9 +35,14 @@ func newApp() *App {
 
 	healthHandler := health.NewHandler(logger)
 
-	router := router.NewRouter(cfg.HandlerConfig, logger, &router.Handlers{
-		Health: healthHandler,
-	})
+	router := router.NewRouter(
+		cfg.HandlerConfig,
+		cfg.AppConfig,
+		logger,
+		&router.Handlers{
+			Health: healthHandler,
+		},
+	)
 
 	return &App{
 		Router: router,
