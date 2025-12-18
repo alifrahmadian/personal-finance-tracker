@@ -23,6 +23,7 @@ func NewRouter(
 	router.Use(middleware.RequestID())
 	router.Use(middleware.SecurityHeaders(appCfg))
 	router.Use(middleware.CORS(handlerCfg))
+	router.Use(middleware.TimeoutGuard(handlerCfg))
 
 	if handlerCfg.RequestLogger {
 		router.Use(middleware.RequestLogger(logger))
