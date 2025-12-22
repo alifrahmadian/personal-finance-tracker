@@ -15,6 +15,7 @@ type Handlers struct {
 func NewRouter(
 	handlerCfg *config.HandlerConfig,
 	appCfg *config.AppConfig,
+	authCfg *config.AuthConfig,
 	logger *logrus.Logger,
 	handlers *Handlers,
 ) *gin.Engine {

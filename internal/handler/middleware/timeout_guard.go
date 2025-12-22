@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/alifrahmadian/personal-finance-tracker/internal/config"
+	"github.com/alifrahmadian/personal-finance-tracker/internal/handler/response"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +18,9 @@ func TimeoutGuard(handlerConfig *config.HandlerConfig) gin.HandlerFunc {
 		c.Next()
 
 		if ctx.Err() == context.DeadlineExceeded && !c.IsAborted() {
-			c.AbortWithStatus(http.StatusGatewayTimeout)
+			response.Error(c, http.StatusGatewayTimeout, ctx.Err().Error(), "")
+			c.Abort()
+
 			return
 		}
 	}
